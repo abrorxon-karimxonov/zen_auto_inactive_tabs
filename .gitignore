@@ -1,1 +1,5 @@
-./CLAUDE.md
+CLAUDE.md
+.DS_Store
+.amo_upload-uuid
+./web-ext-artifacts/*
+
