@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 300px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      color: #1a1a2e;
+      background: #fafafa;
+    }
+
+    h1 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: #6c5ce7;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .toggle-label {
+      font-weight: 500;
+    }
+
+    .toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #ccc;
+      border-radius: 24px;
+      transition: 0.2s;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+
+    .toggle input:checked + .toggle-slider {
+      background: #6c5ce7;
+    }
+
+    .toggle input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+
+    .setting {
+      margin-bottom: 12px;
+    }
+
+    .setting label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .setting input[type="number"] {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .setting input[type="number"]:focus {
+      outline: none;
+      border-color: #6c5ce7;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #6c5ce7;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background: #6c5ce7;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5b4cdb;
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #d0d0d0;
+    }
+
+    .status {
+      margin-top: 12px;
+      padding: 8px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 13px;
+      display: none;
+    }
+
+    .status.success {
+      display: block;
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status.error {
+      display: block;
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <h1>Zen Auto Inactive Tabs</h1>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value" id="totalTabs">-</div>
+      <div class="stat-label">Total</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="activeTabs">-</div>
+      <div class="stat-label">Active</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="discardedTabs">-</div>
+      <div class="stat-label">Suspended</div>
+    </div>
+  </div>
+
+  <div class="toggle-row">
+    <span class="toggle-label">Auto-suspend enabled</span>
+    <label class="toggle">
+      <input type="checkbox" id="enabled">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="setting">
+    <label for="timeout">Suspend after (seconds)</label>
+    <input type="number" id="timeout" min="5" max="3600" value="30">
+  </div>
+
+  <div class="checkbox-row">
+    <input type="checkbox" id="excludePinned">
+    <label for="excludePinned">Exclude pinned tabs</label>
+  </div>
+
+  <div class="checkbox-row">
+    <input type="checkbox" id="excludeAudible">
+    <label for="excludeAudible">Exclude tabs playing audio</label>
+  </div>
+
+  <div class="buttons">
+    <button class="btn-primary" id="discardBtn">Suspend Now</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

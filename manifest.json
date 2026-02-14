@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "Zen Auto Inactive Tabs",
+  "version": "1.0.1",
+  "description": "Automatically suspends inactive tabs to reduce memory usage in Zen Browser",
+  "author": "abror",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "zen-auto-inactive-tabs@example.com",
+      "strict_min_version": "91.0"
+    }
+  },
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Zen Auto Inactive Tabs",
+    "default_icon": {
+      "16": "icons/icon-16.svg",
+      "32": "icons/icon-32.svg",
+      "48": "icons/icon-48.svg"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.svg",
+    "32": "icons/icon-32.svg",
+    "48": "icons/icon-48.svg",
+    "96": "icons/icon-96.svg"
+  }
+}
